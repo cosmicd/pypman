@@ -1,0 +1,13 @@
+# In addition to default file pick up by python setup.py sdist,
+# customize what else to include in the distribution:
+
+# Include the license file
+include LICENSE
+include README.md
+
+# Include the data files if any
+recursive-include sample-data *
+
+# include example-taks
+recursive-include pypman-config-example *
+

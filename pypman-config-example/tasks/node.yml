@@ -1,0 +1,32 @@
+---
+# node tasks examples
+ve: 
+ # ve management 
+ # All tasks, except ve.cr and ve.rm, implicitly 
+ # activate ve for the given project
+ 
+ cr: "mkdir -p ${path_ve} && cd  ${path_pd} && ln -s ${path_ve} node_modules  && . ~/.nvm/nvm.sh && nvm use ${version}" # create new node ve 
+ # Activate ve. This is executed implicitly for commands 
+ # that require node ve (all except ve.cr and ve.rm)
+ ac: "cd ${path_pd} && . ~/.nvm/nvm.sh && nvm use ${version}" 
+ rm: "rm -r ${path_ve}" # remove ve 
+ which: "node --version && npm version"
+ rmls: "sudo rm ${slink}" # remove symbolic link to node modules 
+ rb: "npm rebuild ${pkg}"
+ ir: "npm install"   
+ ip: "npm install ${pkg} -P" 
+ id: "npm install ${pkg} -D"   
+ uip: "npm uninstall ${pkg} -P"
+ uid: "npm uninstall ${pkg} -D"  
+ up: "npm update ${pkg}"
+ npmup: "npm install npm@latest"
+ v: "npm view ${pkg}"
+ l: "npm list ${pkg}" 
+
+
+ #####################################
+ # Global tasks
+ ###################################
+ # whatever you like here
+ exmp:
+  npm: "which npm"

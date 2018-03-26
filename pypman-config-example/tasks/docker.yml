@@ -1,0 +1,54 @@
+sp: 
+  # setup, installation, removal
+  ui: "sudo apt-get update && sudo apt-get remove docker docker-engine docker.io && sudo apt-get purge docker-ce"
+  ir: "sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common"
+  ak: "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -"
+  ar: "sudo add-apt-${repo} 'deb [arch=amd64] https://download.docker.com/linux/debian jessie stable' " # manually replaced output of 'lsb_release -cs' with jessie
+  i: "sudo apt-get update && sudo apt-get install docker-ce"
+  test: "sudo docker run hello-world" # this will download and test a small image
+  rma: "sudo rm -rf /var/lib/docker" # remove all: images, containers, volumes. Use task ui to uninstall docker itself
+  v: "sudo docker --version"
+  # container related commands
+  b: "cd ${path_pd} && sudo docker build -t ${iname} ." # create image. iname is the name of the image to be built. You need to supply a docker file in the project directory path_pd
+
+op:
+# operate docker; TBD
+  rl: "docker run -p 4000:80 ${iname}" # Run "friendlyname" mapping port 4000 to 80
+  rd: "docker run -d -p 4000:80 ${iname}"         # Same thing, but in detached mode
+  ln: "docker login"             # Login the CLI session using your Docker credentials
+  ti: "docker tag ${iname} ${uname}/${rep}:${tag}"  # Tag <image> for upload to registry
+  ul: "docker push ${uname}/${rep}:${tag}"            # Upload tagged image to registry
+  rr: "docker run ${uname}/${rep}:${tag}"                   # Run image from a registry
+  ps: "docker ps"                                 # See a list of all running containers
+  s: "docker stop ${hash}"                   # Gracefully stop the specified container
+  psa: "docker ps -a"          # See a list of all containers, even the ones not running
+  k: "docker kill ${hash}"                  # Force shutdown of the specified container
+  rm: "docker rm ${hash}"             # Remove the specified container from this machine
+  rma: "docker rm $(docker ps -a -q)"           # Remove all containers from this machine
+  via: "docker images -a"                              # Show all images on this machine
+  rmi: "docker rmi ${iname}"            # Remove the specified image from this machine
+  rmia: "docker rmi $(docker images -q)"             # Remove all images from this machine
+  
+cmp:
+# compose  
+  i: "curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose" # you have to be in the root shell (manually do: sudo -s before running this command). 
+  v: "docker-compose --version"
+  ui: "sudo rm /usr/local/bin/docker-compose" 
+  
+st:
+# stack  
+  ls: "docker stack ls"             # List all running applications on this Docker host
+  dp: "docker stack deploy -c ${cfile} ${app}"  # Run the specified Compose file
+  s: "docker stack services ${app}"       # List the services associated with an app
+  ps: "docker stack ps ${app}"   # List the running containers associated with an app
+  rm: "docker stack rm ${app}"                            # Tear down an application
+  
+mn:
+# machine  
+  i: "sudo curl -L https://github.com/docker/machine/releases/download/v0.12.2/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine" # install docker machine to manage swarms 
+  v: "docker-machine version" 
+  cr: "sudo docker-machine create -d virtualbox --virtualbox-no-vtx-check ${mname}" # this will create machine mname; The flag --virtualbox-no-vtx-check is needed if using nested virtualbox.
+  ui: "sudo rm $(which docker machine)" # this removes executable. do this manually first get output of: which docker machine
+  rmm: "sudo docker-machine rm ${mname}" # mname is machine name
+  rmallm: "sudo docker-machine rm -f $(docker-machine ls -q)" #rm all machines; might have to do this manually
+  

@@ -1,0 +1,20 @@
+---
+# aws cli
+iam:
+ ul: "aws iam list-users"
+s3:
+ mb11: "aws s3 mb s3://${bucket}" 
+ mb12: "aws s3 mb s3://${bucket} && aws s3 mb s3://www.${bucket}" #(e.g. example.com and www.example.com)
+ # sync local DIRECTORY to existing bucket with public-read; 
+ # target files deleted if not in local directory, otherwise 
+ # updated. This is the best way to update a bucket OR clear 
+ # and fill new content. To clear a bucket, just use 
+ # src= empty_directory
+ sync11: "aws s3 sync ${path_pd}/${src} s3://${bucket} --acl public-read  --delete" 
+ sync12: "aws s3 sync ${path_pd}/${src} s3://${bucket} --acl public-read" # sync1 without delete
+ sync21: "aws s3 sync ${path_pd}/${src} s3://${bucket} --acl private  --delete" 
+ sync22: "aws s3 sync ${path_pd}/${src} s3://${bucket} --acl private"  
+ wsite11: "aws s3 website s3://${bucket} --index-document index.html" 
+ wsite12: "aws s3 website s3://${bucket} --index-document ${index}" # variable entry name
+ s3lsob: "aws s3api list-objects --bucket bucketName --query Contents[].[Key,Size]"
+ 

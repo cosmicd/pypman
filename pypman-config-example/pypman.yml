@@ -1,0 +1,35 @@
+---
+# useage: pypman t0
+info: "project config for pypman."
+
+# '.local means' this host is local.
+# execute tasks on these hosts 
+targetHosts: [devT420Jessie.local] 
+# relative-path-to-packacge.json,ve-name, node-version,
+node: [frontend,devmaster-nd9.3.0, 9.3.0] 
+# relative-path-to-requirements.txt,ve-name, python-version
+python: [backend,devmaster-py3.6.1, 3.6.1] 
+  
+task: # you may define tasks from [a-z]0 to [a-z]99. py.* 
+# By default tasks run in parallel. To run tasks in series, 
+# prefix your task names by 's.' (e.g. s.aws.s3.mb11); 
+# series execution is needed for tasks that require 
+# a user input or the tasks that require other tasks to be 
+# finished first. 
+
+# Tasks in node.ve and python.ve will run within the existing 
+# virtual env space of the project (see 'python' and 'node' keys above) 
+#  if ve does not exist, pypman will complain. You can create
+# ve using node.ve.cr or python.ve.cr
+
+# You may define lists of tasks to execute multiple tasks in 
+# a given order. You cannot use a list inside a list though.
+
+ t1: [t2,t3] 
+ t2: s.node.ve.cr 
+ t3: s.node.ve.which
+ t4: s.node.prv.npm
+ t5: s.python.ve.cr
+ t6: s.python.ve.ir
+ t7: s.python.ve.tmp2
+

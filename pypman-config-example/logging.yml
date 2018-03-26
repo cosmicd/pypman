@@ -1,0 +1,59 @@
+---
+version: 1
+disable_existing_loggers: False
+
+
+root: #Our app will use Only these handlers with a common log level
+    level: INFO 
+    handlers: [console,fhd_info,fhd_error]    
+#    handlers: [console, syslog, fhd_info, fhd_error]
+    
+loggers: # here you can override root config for any modules your app is importing
+    pypman.master:
+        level: INFO
+        handlers: [console] # only use these handlers for this module
+        propagate: False # do not propagate logging to other handlers configured by root
+
+formatters:
+    fmt1:
+        format: "%(name)s - %(levelname)s - %(message)s"
+    fmt2:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: INFO
+        formatter: fmt1
+        stream: ext://sys.stdout
+
+    fhd_info:
+        class: logging.handlers.RotatingFileHandler
+        level: INFO
+        formatter: fmt1
+        filename: ./pypman/logs/info.log
+        maxBytes: 10000 # 100kB
+        backupCount: 2 # so you'll have two saved files and a third one active. so max info 300kB 
+        encoding: utf8
+
+    fhd_error:
+        class: logging.handlers.RotatingFileHandler
+        level: ERROR
+        formatter: fmt2
+        filename: ./pypman/logs/errors.log
+        maxBytes: 100000 # 100kB 
+        backupCount: 2
+        encoding: utf8
+    syslog: # on debian-jessie, output will go to /var/log/syslog which is overwritten every time machine is booted. syslog keeps backup files in /var/log/syslog*
+        class: logging.handlers.SysLogHandler
+        level: INFO
+        formatter: fmt1 # syslog by default has a time stamp; no need for fmt2
+        address: /dev/log  # this is system dependent. TBD: move to host config.  
+    smtp:
+        level: ERROR
+        class: logging.handlers.SMTPHandler
+        formatter: fmt2
+        mailhost: [localhost, 25]
+        fromaddr: "user@example.com" 
+        toaddrs: ["root@ubuntu-xenial.vagrantup.com"] # username has to be root;
+        subject: "pypman crashed"  # just an example

@@ -1,0 +1,42 @@
+---
+# WARN: Tasks (gb.*.*) in this file are executed globally 
+# (without activation of your projects node/python env)!
+# use1: pypman gb.test.t1 # if running directly from cli.
+# use2: pypman t0 # if running from a project config with t0 defined in there.
+test:
+  t1: "echo Just a test!"
+  t2: "cd ${path_pd} && ls -l"
+
+vbox:
+ addk: "sudo wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -"
+ i: "sudo apt-get update && sudo apt-get install virtualbox-5.1" # install vbox
+ dkms: "sudo apt-get install dkms" # this package might be needed for kernel updates in debian
+ vbox: "lsmod | grep -i vbox" # check virtualbox guest editions version
+
+ sup: ## system update
+  up: "sudo aptitude update && sudo aptitude upgrade"
+  i: "sudo aptitude install ${pkg}"
+  ac: "sudo aptitude autoclean" 
+  rmup: "sudo apt-get autoremove && sudo apt-get update && sudo apt-get upgrade"
+  v: "lsb_release -a && uname -a && uname -r" 
+  rln: "sudo su root"
+  rsh: "sudo -s" # if you are a root, enter the root shell. once in the rootshell, root use passwd to change root passwd. If you are a sudoer and root
+  ri: "env | grep root " # print info after going to root shell(you have to manually sudo -s first)
+  sdr: "cat /etc/sudoers"
+  gp: "cat /etc/group" # user groups     
+
+hist:
+ l: "history>tmp.txt" # with line numbers
+ nl: "history | sed 's/^ *[0-9]* *//'> tmp.txt" # or history -w tmp.txt # without line numbers
+
+ssh:
+ k: "ls ~/.ssh/id_rsa*" # ssh key pairs
+ opt: "more /etc/ssh/sshd_config" # ssh options
+ kg: "ssh-keygen -b 4096" # key generation; do not do it if you already have keys, it will overwrite and lock you frm system access
+
+pfx: 
+ i: "sudo apt-get install postfix mailutils" # use option 'satellite system' in initial config
+ pg: "sudo apt-get purge postfix"
+ pm1: "sudo postmap /etc/postfix/sasl_passwd"
+ pm2: "sudo postmap /etc/postfix/generic"
+ rt: "sudo /etc/init.d/postfix restart"

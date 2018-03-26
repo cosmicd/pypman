@@ -1,0 +1,14 @@
+psql:
+  i: "sudo apt-get update && sudo apt-get install postgresql-9.4" # install postgresql core server
+  check: "ps -ef | grep postgres"
+  becomeroot: "sudo su root" # become root then:
+  postgreslogin: "su - postgres" #switch to the default postgres user then:
+  cruser: "createuser --interactive" # create new user then (e.g. test1):
+  drdb: "create db test1" #create db; it will be associated to user test1 then:
+  exit: "exit" # exit for user postgres; you are still loggedin as root then
+  adduser: "sudo adduser test1" # add user test1 in linux accounts then exit from root login
+  becometest1: "sudo su test1" # become test1 in linux account
+  test1login: "su - test1" # login as test1 postgres account
+  psql: "psql" # enter the psql shell to exit type \q and then exit and exit again 
+  postgis: "sudo apt-get install postgresql-9.4-postgis" # install postgis for postgresql 9.4
+  

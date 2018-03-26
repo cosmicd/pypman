@@ -1,0 +1,81 @@
+---
+# python tasks examples
+
+ve:
+ # ve management 
+ # All tasks, except ve.cr and ve.rm, implicitly 
+ # activate ve for the given project
+ cr: "mkdir -p ${path_ve}  && cd ${path_pd} && pyenv local ${v} && virtualenv --system-site-packages ${path_ve}"
+ ac: "cd ${path_pd} && . ${path_ve}/bin/activate && which python && python -V"
+ rm: "rm -r ${path_ve}"
+ ir: "cd ${path_pd} && pip install -r ${reqp}"  # reqp is rpath to requirements file
+ i: "pip install ${pkg}"
+ ie: "cd ${path_pd} && pip install -e ." # install local package in edit mode
+ ui: "pip uninstall ${pkg}"
+ up: "pip install --upgrade ${pkg}"
+ v:  "pip show ${pkg}"  
+ html: "make html" # using sphinx
+
+ #####################################
+ # Global tasks
+ ###################################
+misc:
+  zlib: "sudo apt-get install zlib1g-dev" # this is needed for unzipping python 
+pyenv:
+  i: "sudo curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash" # add manually to .bashrc: 
+  brc1: "echo 'export PATH=/home/ubuntu/.pyenv/bin:$PATH >> .bashrc' "
+  brc2: "echo 'eval $(pyenv init -)' "
+  brc3: "echo 'eval $(pyenv virtualenv-init -) >> .bashrc' "
+  pyv1: "pyenv version" # currently active python version 
+  pyv2: "pyenv versions" # installed python versions
+  pyv3: "pyenv install --list" # python versions available for installation
+  pyi: "pyenv install 3.6.3" # install a version 
+  pyg: "echo 'pyenv global 3.6.3 >> .bashrc' " # add this to .bashrc to always use the same python globally
+  up: "sudo pyenv update" # update existing pyenv
+  rh: "pyenv rehash" # rehash shims; needed when you install a new cli tool like pypman 
+
+setup:
+ test: "python setup.py test"
+
+lint: # python linting and correction
+ pylint: "pylint ${target}" # see pylint docs for path requirements. eg target= mypackage/mym.py
+ autopep: "autopep8 --aggressive --aggressive ${target}"  
+
+spx: # sphinx docs for a target project
+ start: "sphinx-quickstart"
+ html: "pypman python.ve.ac && make html"  
+ serve: "cd ${path_pd}/build/html && python -m http.server 8000"
+ serve_bind: "cd ${path_pd}/build/html && python -m http.server 8000 --bind 127.0.0.1"
+ clean: "make clean"   
+
+flask:
+# cr: "export FLASK_APP=flaskr.factory:create_app"
+ run: "export FLASK_APP=${fkapp} && flask run --host=0.0.0.0" 
+ initdb: "flask initdb"
+ help: "flask --version"
+
+ablog:
+ start: "ablog start"
+tinker:
+ setup: "tinker --setup"
+ post: "tinker --post ${tgt}"
+ page: "tinker --page ${tgt}" 
+ draft: "tinker --draft ${tgt}"
+ dpost: "tinker --post drafts/${tgt}"
+ unpost: "tinker --draft ${tgt}"  
+ build: "tinker --build"
+ serve: "python -m http.server 8000" 
+prf: # performance related tasks
+ gprof2dotsvg: "gprof2dot -f pstats lpstatsload | dot -Tsvg -o cprofstats.svg" # requires output from cprofile
+ gprof2dotpng: "gprof2dot -f pstats cprofstats | dot -Tpng -o cprofstats.png"
+# gprof2dotxdot: "gprof2dot -f pstats -o cprofstats.dot cprofstats | xdot" # doesnt work
+# peye: "gprof2dot -f pstats -o stat.dot cprofstats | profile_eye --file-colon_line-colon-label-format > peyeout.html" # doesnt work
+ perftt: "python -m perf timeit '[1,2]*1000' " # python -m needed because there is also a linux tool 'perf'
+ perfmd: "python -m perf collect_metadata"
+ perfss: "python -m perf system show"
+ memprf: "mprof run --include-children --multiprocess pypman pypman py.ve.tmp && mprof plot"
+ 
+lektor:
+ cr: "lektor quickstart"
+ 
+ 

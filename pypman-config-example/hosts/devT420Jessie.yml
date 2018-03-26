@@ -1,0 +1,6 @@
+--- 
+name: devT420Jessie
+paths: 
+ venode: /path/to/ve/ve-node # node virtual environments 
+ vepython: /path/to/ve/ve-python # python virtual environments 
+
